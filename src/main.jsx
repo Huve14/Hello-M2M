@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import createGlobe from 'cobe';
 import {
   ArrowLeft,
   ArrowRight,
@@ -37,6 +38,68 @@ const SERVICES = [
 
 const CLIENTS = ['VERTEX', 'LUMEN', 'NOMAD', 'ORBIT', 'SABLE', 'FYNBOS', 'KITE', 'KAPPA'];
 const KEY_ROWS = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'].map((row) => row.split(''));
+const ACTIVATION_REGIONS = [
+  {
+    id: 'betway',
+    city: 'Johannesburg',
+    campaign: 'Betway Bucks',
+    label: 'Pick n Pay activation',
+    lat: -26.2,
+    lon: 28.05,
+    rotate: -5,
+    image: '/assets/activations/betway-activation.png',
+  },
+  {
+    id: 'mr-price-mall',
+    city: 'Durban',
+    campaign: 'Mr Price Cellular',
+    label: 'Mall activation',
+    lat: -29.86,
+    lon: 31.02,
+    rotate: 4,
+    image: '/assets/activations/mr-price-mall.png',
+  },
+  {
+    id: 'cell-c',
+    city: 'Cape Town',
+    campaign: 'Cell C',
+    label: 'Year-end event',
+    lat: -33.92,
+    lon: 18.42,
+    rotate: -3,
+    image: '/assets/activations/cell-c-event.png',
+  },
+  {
+    id: 'pg-glass',
+    city: 'Gqeberha',
+    campaign: 'PG Glass',
+    label: 'Dealer conference',
+    lat: -33.96,
+    lon: 25.6,
+    rotate: 5,
+    image: '/assets/activations/pg-glass-event.png',
+  },
+  {
+    id: 'mr-price-promo',
+    city: 'Bloemfontein',
+    campaign: 'Mr Price',
+    label: 'Store openings',
+    lat: -29.12,
+    lon: 26.21,
+    rotate: -4,
+    image: '/assets/activations/mr-price-promo.png',
+  },
+  {
+    id: 'telkom',
+    city: 'Pretoria',
+    campaign: 'Telkom',
+    label: 'Valued SIM campaign',
+    lat: -25.75,
+    lon: 28.23,
+    rotate: 3,
+    image: '/assets/activations/telkom-promo.png',
+  },
+];
 
 function useClock() {
   const [now, setNow] = useState(new Date());
@@ -564,8 +627,206 @@ function ExploreScreen({ date, time, onBack }) {
           ))}
         </div>
         <SectionHeading>Who loves us</SectionHeading>
-        <div className="client-grid">
-          {CLIENTS.map((client) => <span className="display" key={client}>{client}</span>)}
+        <ActivationGlobeShowcase />
+      </div>
+    </section>
+  );
+}
+
+function ActivationGlobeShowcase() {
+  const canvasRef = useRef(null);
+  const stageRef = useRef(null);
+  const markerRefs = useRef({});
+  const [activeId, setActiveId] = useState(ACTIVATION_REGIONS[0].id);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+
+    const centerPhi = -2.04;
+    const centerTheta = -0.5;
+    const globeScale = 1.45;
+    let phi = centerPhi;
+    let theta = centerTheta;
+    let dragPhi = 0;
+    let dragTheta = 0;
+    let pointerDown = null;
+    let globe = null;
+    let disposed = false;
+    const startTime = Date.now();
+
+    const updateMarkers = (phiCam, thetaCam) => {
+      const rect = canvas.getBoundingClientRect();
+      const radius = (rect.width / 2) * 0.9 * globeScale;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const lambda0 = -(phiCam + Math.PI / 2);
+      const theta0 = thetaCam;
+
+      ACTIVATION_REGIONS.forEach((region) => {
+        const lambda = (region.lon * Math.PI) / 180;
+        const phiLat = (region.lat * Math.PI) / 180;
+        const delta = lambda - lambda0;
+        const cosc = Math.sin(theta0) * Math.sin(phiLat) + Math.cos(theta0) * Math.cos(phiLat) * Math.cos(delta);
+        const x = Math.cos(phiLat) * Math.sin(delta);
+        const y = Math.cos(theta0) * Math.sin(phiLat) - Math.sin(theta0) * Math.cos(phiLat) * Math.cos(delta);
+        const el = markerRefs.current[region.id];
+        if (!el) return;
+
+        if (cosc < -0.02) {
+          el.style.opacity = 0;
+          el.style.filter = 'blur(7px)';
+          el.style.transform = `translate(-50%, -100%) rotate(${region.rotate}deg) scale(0.86)`;
+          return;
+        }
+
+        const visibility = Math.min(1, Math.max(0, (cosc + 0.02) / 0.36));
+        el.style.left = `${centerX + x * radius}px`;
+        el.style.top = `${centerY - y * radius}px`;
+        el.style.opacity = visibility;
+        el.style.filter = `blur(${(1 - visibility) * 7}px)`;
+        el.style.transform = `translate(-50%, -100%) rotate(${region.rotate}deg) scale(${0.86 + visibility * 0.14})`;
+      });
+    };
+
+    const initGlobe = () => {
+      if (disposed || globe || canvas.offsetWidth === 0) return;
+      const width = canvas.offsetWidth;
+      const markers = ACTIVATION_REGIONS.map((region) => ({
+        location: [region.lat, region.lon],
+        size: 0.07,
+      }));
+
+      globe = createGlobe(canvas, {
+        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+        width,
+        height: width,
+        phi: centerPhi,
+        theta: centerTheta,
+        scale: globeScale,
+        dark: 0,
+        diffuse: 1.45,
+        mapSamples: 22000,
+        mapBrightness: 5.8,
+        baseColor: [0.86, 0.87, 0.87],
+        markerColor: [0.93, 0.11, 0.14],
+        glowColor: [0.08, 0.13, 0.3],
+        markers,
+        opacity: 0.96,
+        onRender: (state) => {
+          const elapsed = (Date.now() - startTime) / 1000;
+          if (!pointerDown) {
+            state.phi = phi + Math.sin(elapsed * 0.12) * 0.16 + dragPhi;
+            state.theta = theta + Math.cos(elapsed * 0.08) * 0.02 + dragTheta;
+          } else {
+            state.phi = phi + dragPhi;
+            state.theta = theta + dragTheta;
+          }
+          updateMarkers(state.phi, state.theta);
+        },
+      });
+      canvas.style.opacity = '1';
+    };
+
+    const onPointerDown = (event) => {
+      pointerDown = { x: event.clientX, y: event.clientY };
+      canvas.setPointerCapture?.(event.pointerId);
+      canvas.style.cursor = 'grabbing';
+    };
+
+    const onPointerMove = (event) => {
+      if (!pointerDown) return;
+      dragPhi = (event.clientX - pointerDown.x) / 190;
+      dragTheta = (event.clientY - pointerDown.y) / 270;
+    };
+
+    const onPointerUp = (event) => {
+      if (pointerDown) {
+        phi += dragPhi;
+        theta += dragTheta;
+        dragPhi = 0;
+        dragTheta = 0;
+      }
+      pointerDown = null;
+      canvas.releasePointerCapture?.(event.pointerId);
+      canvas.style.cursor = 'grab';
+    };
+
+    const observer = new ResizeObserver(() => initGlobe());
+    observer.observe(canvas);
+    initGlobe();
+    canvas.addEventListener('pointerdown', onPointerDown);
+    canvas.addEventListener('pointermove', onPointerMove);
+    canvas.addEventListener('pointerup', onPointerUp);
+    canvas.addEventListener('pointerleave', onPointerUp);
+
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      canvas.removeEventListener('pointerdown', onPointerDown);
+      canvas.removeEventListener('pointermove', onPointerMove);
+      canvas.removeEventListener('pointerup', onPointerUp);
+      canvas.removeEventListener('pointerleave', onPointerUp);
+      globe?.destroy?.();
+    };
+  }, []);
+
+  return (
+    <section className="activation-showcase">
+      <div className="activation-copy">
+        <p className="eyebrow">South Africa, up close</p>
+        <h2 className="display">Activation footprint</h2>
+        <p>
+          M2M brings brands into real spaces across South Africa, from mall activations and
+          retail campaigns to conferences, launch events and branded experiences.
+        </p>
+        <div className="activation-stats">
+          <Stat value="6" label="featured campaigns" />
+          <Stat value="9" label="province-ready reach" />
+          <Stat value="SA" label="zoomed local focus" />
+        </div>
+      </div>
+      <div className="activation-globe-card">
+        <div className="activation-globe-wrap">
+          <canvas className="activation-globe" ref={canvasRef} />
+          <span className="activation-globe-surface" aria-hidden="true">
+            <b>South Africa</b>
+          </span>
+          <div className="activation-polaroid-stage" ref={stageRef}>
+            {ACTIVATION_REGIONS.map((region) => (
+              <button
+                className={`activation-polaroid ${activeId === region.id ? 'is-active' : ''}`}
+                key={region.id}
+                ref={(node) => {
+                  if (node) markerRefs.current[region.id] = node;
+                }}
+                style={{ '--r': `${region.rotate}deg` }}
+                type="button"
+                onClick={() => setActiveId(region.id)}
+                onPointerEnter={() => setActiveId(region.id)}
+              >
+                <img src={region.image} alt={`${region.campaign} ${region.label}`} />
+                <span>
+                  <strong>{region.campaign}</strong>
+                  {region.city}
+                </span>
+                <i />
+              </button>
+            ))}
+          </div>
+        </div>
+        <p className="activation-hint">Drag to rotate · photo cards face forward around South Africa</p>
+        <div className="activation-chip-row">
+          {ACTIVATION_REGIONS.map((region) => (
+            <button
+              className={activeId === region.id ? 'is-hot' : ''}
+              key={region.id}
+              type="button"
+              onClick={() => setActiveId(region.id)}
+            >
+              {region.campaign}
+            </button>
+          ))}
         </div>
       </div>
     </section>
