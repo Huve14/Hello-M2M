@@ -911,8 +911,9 @@ function InfoScreen({ date, time, onBack }) {
       <TopBar date={date} time={time} onBack={onBack} />
       <div className="info-layout">
         <InfoPanel icon={Wifi} kicker="Guest Wi-Fi" title="You're welcome online">
-          <InfoRow label="Network" value="M2M-Guest" />
-          <InfoRow label="Password" value="Inspire2009" />
+          <WifiQrCard />
+          <InfoRow label="Network" value="Finetune Guest" />
+          <InfoRow label="Password" value="Finetune2019" />
         </InfoPanel>
         <InfoPanel icon={MapPin} kicker="Find us" title="Reception">
           <InfoRow label="Address" value="399 Jan Smuts Avenue, Craighall Park, Randburg" />
@@ -921,6 +922,20 @@ function InfoScreen({ date, time, onBack }) {
         </InfoPanel>
       </div>
     </section>
+  );
+}
+
+function WifiQrCard() {
+  return (
+    <div className="wifi-qr-card">
+      <span>Finetune Guest</span>
+      <div className="wifi-qr-frame">
+        <img src="/assets/wifi/finetune-guest-qr.png" alt="Wi-Fi QR code for Finetune Guest" />
+        <i aria-hidden="true">
+          <Wifi />
+        </i>
+      </div>
+    </div>
   );
 }
 
