@@ -171,11 +171,34 @@ function AttractScreen({ date, time, onStart }) {
         <img src="/assets/m2m-white.png" alt="M2M" />
         <p>taking <strong>BRAND</strong> to life</p>
       </div>
+      <AttractNetworkVisual />
       <ParticleButton onActivate={onStart}>
         <span>Touch to begin</span>
       </ParticleButton>
       <ClockPlate date={date} time={time} />
     </section>
+  );
+}
+
+function AttractNetworkVisual() {
+  return (
+    <div className="attract-network" aria-hidden="true">
+      <span className="attract-network-grid" />
+      <span className="attract-network-halo attract-network-halo-main" />
+      <span className="attract-network-halo attract-network-halo-soft" />
+      <span className="attract-orbit attract-orbit-one">
+        <i />
+      </span>
+      <span className="attract-orbit attract-orbit-two">
+        <i />
+      </span>
+      <img src="/assets/m2m-white.png" alt="" />
+      <span className="attract-network-link">
+        <i />
+        <b />
+        <i />
+      </span>
+    </div>
   );
 }
 
