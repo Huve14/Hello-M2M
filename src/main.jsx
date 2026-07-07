@@ -26,14 +26,48 @@ const HOSTS = [
   { name: 'Fatima Ismail', role: 'Finance & Operations' },
 ];
 
-const SERVICES = [
-  ['01', 'Promotions & Events', 'Brand activations that put your story face-to-face with the people who matter.'],
-  ['02', 'Field Marketing', 'On-the-ground teams, campaigns, audits and merchandising built for measurable reach.'],
-  ['03', 'Research & Data', 'Practical insights, clean databases and reporting that keep decisions sharp.'],
-  ['04', 'Marketing Strategy', 'Campaign planning, creative direction and delivery management from concept to close.'],
-  ['05', 'Concept & Design', 'Brand worlds, production-ready creative and visual systems made to travel.'],
-  ['06', 'Audio Facilities', 'In-house audio production that gives brand messages a confident voice.'],
-  ['07', 'Branding', 'Corporate identity, promotional items, banners, signage and everything between.'],
+const SERVICE_CATEGORIES = [
+  {
+    title: 'Experiential Marketing',
+    logo: '/assets/m2m-blue.png',
+    logoClass: 'service-logo-red',
+    showTitle: true,
+    items: [
+      'Brand Activations',
+      'Consumer Engagement',
+      'In-Store and Retail Experiences',
+      'Corporate & Consumer Events',
+      'Trade Shows and Exhibitions',
+      'Promo Gifting and Branding',
+      'Printing',
+    ],
+  },
+  {
+    title: 'Field Marketing',
+    logo: '/assets/services/m2m-field-marketing.png',
+    logoClass: 'service-logo-field',
+    items: [
+      'Trade Marketing',
+      'Direct Sales',
+      'Merchandising',
+      'Mystery Shopping',
+      'Consumer Insights',
+      'Community Engagements',
+      'App',
+    ],
+  },
+  {
+    title: 'Content',
+    logo: '/assets/services/m2m-content.png',
+    logoClass: 'service-logo-content',
+    items: ['Audio Studios', 'Editing and 3D Animation', 'Green Screen Studios', 'Podcast Studios', 'Design Studios', 'Digital Marketing'],
+  },
+  {
+    title: 'Innovation',
+    logo: '/assets/services/m2m-innovation.png',
+    logoClass: 'service-logo-innovation',
+    items: ['Holographic Tech', 'Digital Screen', 'In-store Radio and TV', 'AI Marketing Tools', 'Digital Outdoor', 'Software Dev'],
+  },
 ];
 
 const CLIENTS = ['VERTEX', 'LUMEN', 'NOMAD', 'ORBIT', 'SABLE', 'FYNBOS', 'KITE', 'KAPPA'];
@@ -617,19 +651,32 @@ function ExploreScreen({ date, time, onBack }) {
           <Stat value="360°" label="Above and below the line" />
         </div>
         <SectionHeading>What we do</SectionHeading>
-        <div className="service-grid">
-          {SERVICES.map(([number, title, body]) => (
-            <article className="service-card" key={title}>
-              <span className="display">{number}</span>
-              <h2>{title}</h2>
-              <p>{body}</p>
-            </article>
-          ))}
-        </div>
+        <ServiceCategoryGrid />
         <SectionHeading>Who loves us</SectionHeading>
         <ActivationGlobeShowcase />
       </div>
     </section>
+  );
+}
+
+function ServiceCategoryGrid() {
+  return (
+    <div className="service-category-grid">
+      {SERVICE_CATEGORIES.map((category) => (
+        <article className="service-category-card" key={category.title}>
+          <div className="service-logo-lockup">
+            <img className={category.logoClass} src={category.logo} alt={`M2M ${category.title}`} />
+            {category.showTitle && <strong className="display">{category.title}</strong>}
+          </div>
+          <ul>
+            {category.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <button type="button">Read More</button>
+        </article>
+      ))}
+    </div>
   );
 }
 
