@@ -642,18 +642,19 @@ function ExploreScreen({ date, time, onBack }) {
       <ExploreM2MBackground />
       <TopBar date={date} time={time} onBack={onBack} />
       <div className="scroll-view explore-layout">
-        <p className="eyebrow">What defines us</p>
-        <h1 className="display explore-title">We take <span>brands</span> to life and inspire brands to inspire the world.</h1>
-        <p className="lead">Fueled by young, innovative minds alongside seasoned specialists, Marketing2theMAX is a one-stop marketing agency built around activations, events, design, research and brand delivery.</p>
-        <div className="stats-row">
-          <Stat value="2009" label="Born to inspire brands" />
-          <Stat value="#1" label="Fast-growing activations energy" />
-          <Stat value="360°" label="Above and below the line" />
+        <ActivationGlobeShowcase />
+        <div className="explore-intro-lower">
+          <p className="eyebrow">What defines us</p>
+          <h1 className="display explore-title">We take <span>brands</span> to life and inspire brands to inspire the world.</h1>
+          <p className="lead">Fueled by young, innovative minds alongside seasoned specialists, Marketing2theMAX is a one-stop marketing agency built around activations, events, design, research and brand delivery.</p>
+          <div className="stats-row">
+            <Stat value="2009" label="Born to inspire brands" />
+            <Stat value="#1" label="Fast-growing activations energy" />
+            <Stat value="360°" label="Above and below the line" />
+          </div>
         </div>
         <SectionHeading>What we do</SectionHeading>
         <ServiceCategoryGrid />
-        <SectionHeading>Who loves us</SectionHeading>
-        <ActivationGlobeShowcase />
       </div>
     </section>
   );

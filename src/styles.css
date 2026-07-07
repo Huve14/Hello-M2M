@@ -1205,6 +1205,10 @@ button {
   max-width: 82rem;
 }
 
+.explore-intro-lower {
+  margin-top: clamp(4rem, 8vw, 6rem);
+}
+
 .stats-row {
   display: flex;
   flex-wrap: wrap;
