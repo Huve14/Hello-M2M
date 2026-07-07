@@ -350,18 +350,18 @@ button {
 
 .home-radial-bg {
   position: absolute;
-  inset: -4rem;
+  inset: -2rem;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.96;
+  opacity: 1;
 }
 
 .home-radial-bg canvas {
   display: block;
   width: 100%;
   height: 100%;
-  filter: blur(30px) saturate(1.38);
-  transform: scale(1.1);
+  filter: blur(10px) saturate(1.55) contrast(1.08);
+  transform: scale(1.03);
 }
 
 .home-radial-bg::before,
@@ -374,14 +374,14 @@ button {
 
 .home-radial-bg::before {
   background:
-    radial-gradient(circle at 18% 76%, rgba(220, 221, 222, 0.16), transparent 26rem),
-    radial-gradient(circle at 78% 68%, rgba(237, 28, 36, 0.3), transparent 28rem),
-    linear-gradient(110deg, rgba(7, 16, 34, 0.6), rgba(12, 23, 53, 0.28) 48%, rgba(7, 16, 34, 0.68));
+    radial-gradient(circle at 18% 76%, rgba(220, 221, 222, 0.1), transparent 26rem),
+    radial-gradient(circle at 78% 68%, rgba(237, 28, 36, 0.2), transparent 28rem),
+    linear-gradient(110deg, rgba(7, 16, 34, 0.42), rgba(12, 23, 53, 0.14) 48%, rgba(7, 16, 34, 0.5));
 }
 
 .home-radial-bg::after {
-  backdrop-filter: blur(16px);
-  background: rgba(7, 16, 34, 0.14);
+  backdrop-filter: blur(4px);
+  background: rgba(7, 16, 34, 0.06);
 }
 
 .topbar {
