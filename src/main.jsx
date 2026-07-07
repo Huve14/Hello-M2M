@@ -182,6 +182,36 @@ function useClock() {
   }, [now]);
 }
 
+function shouldUseLowPowerMode() {
+  if (typeof window === 'undefined') return false;
+
+  const params = new URLSearchParams(window.location.search);
+  const powerOverride = params.get('power');
+  if (powerOverride === 'full') return false;
+  if (powerOverride === 'low') return true;
+
+  const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const cores = navigator.hardwareConcurrency || 8;
+  const memory = navigator.deviceMemory || 8;
+
+  return Boolean(prefersReducedMotion || cores <= 4 || memory <= 4);
+}
+
+function useKioskPerformanceMode() {
+  const [lowPowerMode, setLowPowerMode] = useState(shouldUseLowPowerMode);
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    if (!motionQuery) return undefined;
+
+    const update = () => setLowPowerMode(shouldUseLowPowerMode());
+    motionQuery.addEventListener?.('change', update);
+    return () => motionQuery.removeEventListener?.('change', update);
+  }, []);
+
+  return lowPowerMode;
+}
+
 function initials(name) {
   return name
     .split(' ')
@@ -199,6 +229,7 @@ function App() {
   const [activeField, setActiveField] = useState('name');
   const [host, setHost] = useState(null);
   const [notificationStatus, setNotificationStatus] = useState('idle');
+  const lowPowerMode = useKioskPerformanceMode();
   const { time, date, greeting } = useClock();
 
   useEffect(() => {
@@ -281,10 +312,18 @@ function App() {
   const firstName = name.trim().split(' ')[0] || 'there';
 
   return (
-    <main className="shell">
+    <main className={`shell ${lowPowerMode ? 'low-power' : ''}`}>
       <BrandStripes />
-      {screen === 'attract' && <AttractScreen date={date} time={time} onStart={goHome} />}
-      {screen === 'home' && <HomeScreen date={date} greeting={greeting} time={time} onNavigate={setScreen} />}
+      {screen === 'attract' && <AttractScreen date={date} lowPowerMode={lowPowerMode} time={time} onStart={goHome} />}
+      {screen === 'home' && (
+        <HomeScreen
+          date={date}
+          greeting={greeting}
+          lowPowerMode={lowPowerMode}
+          time={time}
+          onNavigate={setScreen}
+        />
+      )}
       {screen === 'name' && (
         <NameScreen
           activeField={activeField}
@@ -326,11 +365,11 @@ function BrandStripes() {
   );
 }
 
-function AttractScreen({ date, time, onStart }) {
+function AttractScreen({ date, lowPowerMode, time, onStart }) {
   return (
     <section className="screen attract-screen">
       <AttractNetworkVisual />
-      <ParticleButton onActivate={onStart}>
+      <ParticleButton lowPowerMode={lowPowerMode} onActivate={onStart}>
         <span>Touch to begin</span>
       </ParticleButton>
       <ClockPlate date={date} time={time} />
@@ -360,7 +399,7 @@ function AttractNetworkVisual() {
   );
 }
 
-function ParticleButton({ children, onActivate }) {
+function ParticleButton({ children, lowPowerMode, onActivate }) {
   const buttonRef = useRef(null);
   const [particles, setParticles] = useState([]);
   const [isPressed, setIsPressed] = useState(false);
@@ -372,10 +411,18 @@ function ParticleButton({ children, onActivate }) {
       return;
     }
 
+    if (lowPowerMode) {
+      setIsPressed(true);
+      window.setTimeout(() => setIsPressed(false), 120);
+      window.setTimeout(onActivate, 220);
+      return;
+    }
+
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    const nextParticles = Array.from({ length: 18 }, (_, index) => {
-      const angle = (index / 18) * Math.PI * 2;
+    const particleCount = 14;
+    const nextParticles = Array.from({ length: particleCount }, (_, index) => {
+      const angle = (index / particleCount) * Math.PI * 2;
       const distance = 42 + (index % 4) * 18;
       return {
         id: `${Date.now()}-${index}`,
@@ -429,7 +476,7 @@ function ParticleButton({ children, onActivate }) {
   );
 }
 
-function HomeScreen({ date, greeting, time, onNavigate }) {
+function HomeScreen({ date, greeting, lowPowerMode, time, onNavigate }) {
   const cards = [
     { key: 'name', icon: UserPlus, title: 'Check in', body: "Sign in and we'll let your host know you've arrived." },
     { key: 'explore', icon: Compass, title: 'Explore M2M', body: 'Who we are, what we do, and the brands we bring to life.' },
@@ -438,7 +485,7 @@ function HomeScreen({ date, greeting, time, onNavigate }) {
 
   return (
     <section className="screen inner-screen home-screen">
-      <HomeRadialBackground />
+      <HomeRadialBackground lowPowerMode={lowPowerMode} />
       <TopBar date={date} time={time} />
       <div className="home-layout">
         <p className="eyebrow">Marketing2theMAX</p>
@@ -508,16 +555,20 @@ void main() {
 }
 `;
 
-function HomeRadialBackground() {
+function HomeRadialBackground({ lowPowerMode }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
+    if (lowPowerMode) return undefined;
+
     const canvas = canvasRef.current;
     const gl = canvas?.getContext('webgl2', { premultipliedAlpha: false });
     if (!canvas || !gl) return undefined;
 
     let disposed = false;
     let animationId = 0;
+    let lastRender = 0;
+    const targetFrameMs = 1000 / 24;
     const start = performance.now();
 
     const compile = (type, source) => {
@@ -560,7 +611,7 @@ function HomeRadialBackground() {
     const timeUniform = gl.getUniformLocation(program, 'iTime');
 
     const resize = () => {
-      const pixelRatio = Math.max(1, Math.min(1.5, window.devicePixelRatio || 1));
+      const pixelRatio = Math.max(0.65, Math.min(1, window.devicePixelRatio || 1));
       const width = Math.max(1, Math.floor(canvas.clientWidth * pixelRatio));
       const height = Math.max(1, Math.floor(canvas.clientHeight * pixelRatio));
       if (canvas.width !== width || canvas.height !== height) {
@@ -576,12 +627,17 @@ function HomeRadialBackground() {
 
     const render = (now) => {
       if (disposed) return;
-      resize();
-      gl.useProgram(program);
-      gl.uniform3f(resolutionUniform, canvas.width, canvas.height, window.devicePixelRatio || 1);
-      gl.uniform1f(timeUniform, (now - start) / 1000);
-      gl.bindVertexArray(vao);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      if (!document.hidden && now - lastRender >= targetFrameMs) {
+        lastRender = now;
+        resize();
+        gl.useProgram(program);
+        gl.uniform3f(resolutionUniform, canvas.width, canvas.height, Math.min(1, window.devicePixelRatio || 1));
+        gl.uniform1f(timeUniform, (now - start) / 1000);
+        gl.bindVertexArray(vao);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      }
+
       animationId = window.requestAnimationFrame(render);
     };
 
@@ -595,11 +651,11 @@ function HomeRadialBackground() {
       gl.deleteVertexArray(vao);
       gl.deleteProgram(program);
     };
-  }, []);
+  }, [lowPowerMode]);
 
   return (
     <div className="home-radial-bg" aria-hidden="true">
-      <canvas ref={canvasRef} />
+      {!lowPowerMode && <canvas ref={canvasRef} />}
     </div>
   );
 }

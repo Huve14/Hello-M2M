@@ -540,6 +540,10 @@ button {
   z-index: 0;
   pointer-events: none;
   opacity: 1;
+  background:
+    radial-gradient(circle at 28% 32%, rgba(41, 62, 155, 0.5), transparent 28rem),
+    radial-gradient(circle at 76% 66%, rgba(237, 28, 36, 0.22), transparent 30rem),
+    linear-gradient(135deg, rgba(12, 23, 53, 0.82), rgba(7, 16, 34, 0.96));
 }
 
 .home-radial-bg canvas {
@@ -568,6 +572,100 @@ button {
 .home-radial-bg::after {
   backdrop-filter: blur(4px);
   background: rgba(7, 16, 34, 0.06);
+}
+
+.low-power .screen {
+  animation: none;
+}
+
+.low-power .attract-network::before {
+  filter: blur(1.6rem);
+  opacity: 0.72;
+}
+
+.low-power .attract-network img,
+.low-power .attract-network-halo-main,
+.low-power .attract-network-halo-soft,
+.low-power .attract-orbit-one,
+.low-power .attract-orbit-two,
+.low-power .attract-network-link i,
+.low-power .attract-network-link b::after,
+.low-power .start-button::before,
+.low-power .button-shine {
+  animation: none;
+}
+
+.low-power .button-shine,
+.low-power .particle-layer {
+  display: none;
+}
+
+.low-power .home-radial-bg canvas {
+  display: none;
+}
+
+.low-power .home-radial-bg::after {
+  backdrop-filter: none;
+}
+
+.low-power .action-card,
+.low-power .host-card,
+.low-power .service-category-card button,
+.low-power .activation-chip-row button,
+.low-power .activation-map-pins i,
+.low-power .activation-polaroid {
+  transition-duration: 80ms;
+}
+
+.low-power .action-card,
+.low-power .host-card,
+.low-power .service-card,
+.low-power .info-panel,
+.low-power .visitor-badge,
+.low-power .activation-showcase,
+.low-power .service-category-card,
+.low-power .wifi-qr-frame {
+  box-shadow: 0 0.9rem 2rem rgba(0, 0, 0, 0.18);
+}
+
+.low-power .explore-blob {
+  filter: blur(2.4rem);
+  opacity: 0.36;
+}
+
+.low-power .activation-globe-wrap::before,
+.low-power .activation-globe-surface::before {
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen,
+  .attract-network img,
+  .attract-network-halo-main,
+  .attract-network-halo-soft,
+  .attract-orbit-one,
+  .attract-orbit-two,
+  .attract-network-link i,
+  .attract-network-link b::after,
+  .start-button::before,
+  .button-shine,
+  .particle,
+  .field i {
+    animation: none !important;
+  }
+
+  .home-radial-bg::after {
+    backdrop-filter: none;
+  }
+
+  .action-card,
+  .host-card,
+  .service-category-card button,
+  .activation-chip-row button,
+  .activation-map-pins i,
+  .activation-polaroid {
+    transition-duration: 80ms;
+  }
 }
 
 .topbar {
