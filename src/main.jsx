@@ -13,16 +13,23 @@ import {
 import './styles.css';
 
 const HOSTS = [
-  { name: 'Thabo Mokoena', role: 'Managing Director' },
-  { name: 'Lerato Nkosi', role: 'Creative Director' },
-  { name: 'Sipho Dlamini', role: 'Head of Activations' },
-  { name: 'Aisha Patel', role: 'Client Services Lead' },
-  { name: 'Johan van der Merwe', role: 'Strategy Director' },
-  { name: 'Naledi Khumalo', role: 'Events Manager' },
-  { name: 'Riaan Botha', role: 'Production Lead' },
-  { name: 'Zanele Mthembu', role: 'Research & Insights' },
-  { name: 'Kyle Adams', role: 'Brand Manager' },
-  { name: 'Fatima Ismail', role: 'Finance & Operations' },
+  { id: 'selvan', name: 'Selvan Naidoo', role: 'CEO' },
+  { id: 'valerie', name: 'Valerie Naidoo', role: 'MD' },
+  { id: 'shantal', name: 'Shantal Reis', role: 'PA' },
+  { id: 'jaryd', name: 'Jaryd Chiert', role: 'GM Sales' },
+  { id: 'ronsleigh', name: 'Ronsleigh Meyer', role: 'GM Operations' },
+  { id: 'reoni', name: 'Reoni Moodley', role: 'BUD' },
+  { id: 'robyn', name: 'Robyn Fisher', role: 'BUD' },
+  { id: 'lorreta', name: 'Lorreta Naidoo', role: 'BUD' },
+  { id: 'andrew', name: 'Andrew Falchi', role: 'AM' },
+  { id: 'sameerah', name: 'Sameerah Gafoor', role: 'FTS' },
+  { id: 'tracy', name: 'Tracy Falchi', role: 'Team' },
+  { id: 'suyashan', name: 'Suyashan Naicker', role: 'AM' },
+  { id: 'huveshan', name: 'Huveshan Naicker', role: 'IT' },
+  { id: 'redewaan', name: 'Redewaan Majeet', role: 'Finance' },
+  { id: 'chanel', name: 'Chanel Du Toit', role: 'Debtors' },
+  { id: 'ryan', name: 'Ryan Snyman', role: 'Umedia' },
+  { id: 'jayden', name: 'Jayden Jenkinson', role: 'Umedia' },
 ];
 
 const SERVICE_CATEGORIES = [
@@ -191,6 +198,7 @@ function App() {
   const [company, setCompany] = useState('');
   const [activeField, setActiveField] = useState('name');
   const [host, setHost] = useState(null);
+  const [notificationStatus, setNotificationStatus] = useState('idle');
   const { time, date, greeting } = useClock();
 
   useEffect(() => {
@@ -204,6 +212,7 @@ function App() {
     setName('');
     setCompany('');
     setHost(null);
+    setNotificationStatus('idle');
     setActiveField('name');
   };
 
@@ -241,9 +250,32 @@ function App() {
     updateActiveValue(`${activeValue}${nextLetter}`);
   };
 
+  const notifyHost = async (nextHost) => {
+    try {
+      const response = await fetch('/api/checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          hostId: nextHost.id,
+          visitorName: name.trim(),
+          company: company.trim(),
+          checkedInAt: new Date().toISOString(),
+        }),
+      });
+
+      if (!response.ok) throw new Error('Check-in email request failed');
+      setNotificationStatus('sent');
+    } catch (error) {
+      console.error(error);
+      setNotificationStatus('failed');
+    }
+  };
+
   const selectHost = (nextHost) => {
     setHost(nextHost);
+    setNotificationStatus('sending');
     setScreen('done');
+    void notifyHost(nextHost);
   };
 
   const firstName = name.trim().split(' ')[0] || 'there';
@@ -266,7 +298,17 @@ function App() {
         />
       )}
       {screen === 'host' && <HostScreen hosts={HOSTS} onBack={goBack} onSelect={selectHost} />}
-      {screen === 'done' && <DoneScreen company={company} host={host} name={name} time={time} firstName={firstName} onDone={reset} />}
+      {screen === 'done' && (
+        <DoneScreen
+          company={company}
+          firstName={firstName}
+          host={host}
+          name={name}
+          notificationStatus={notificationStatus}
+          time={time}
+          onDone={reset}
+        />
+      )}
       {screen === 'explore' && <ExploreScreen date={date} time={time} onBack={goBack} />}
       {screen === 'info' && <InfoScreen date={date} time={time} onBack={goBack} />}
     </main>
@@ -617,7 +659,7 @@ function HostScreen({ hosts, onBack, onSelect }) {
         <h1 className="display section-title">Who are you here to see?</h1>
         <div className="host-grid">
           {hosts.map((host) => (
-            <button className="host-card" type="button" key={host.name} onClick={() => onSelect(host)}>
+            <button className="host-card" type="button" key={host.id} onClick={() => onSelect(host)}>
               <span className="avatar display">{initials(host.name)}</span>
               <span>
                 <strong>{host.name}</strong>
@@ -631,14 +673,24 @@ function HostScreen({ hosts, onBack, onSelect }) {
   );
 }
 
-function DoneScreen({ company, firstName, host, name, onDone, time }) {
+function DoneScreen({ company, firstName, host, name, notificationStatus, onDone, time }) {
+  const hostName = host?.name || 'Your host';
+  const isSending = notificationStatus === 'sending';
+  const didFail = notificationStatus === 'failed';
+  const title = isSending ? `Notifying ${hostName}` : didFail ? 'You are checked in' : `${hostName} has been notified`;
+  const message = didFail
+    ? `Thanks ${firstName}. The email did not send automatically. Please let reception know.`
+    : isSending
+      ? `Thanks ${firstName}. We are sending your arrival note now.`
+      : `Thanks ${firstName}. Please take a seat. Someone will be with you shortly.`;
+
   return (
     <section className="screen inner-screen">
       <TopBar />
       <div className="done-layout">
         <span className="success-mark"><Check aria-hidden="true" /></span>
-        <h1 className="display section-title">{host?.name || 'Your host'} has been notified</h1>
-        <p>Thanks {firstName}. Please take a seat. Someone will be with you shortly.</p>
+        <h1 className="display section-title">{title}</h1>
+        <p>{message}</p>
         <div className="visitor-badge">
           <div>
             <img src="/assets/m2m-white.png" alt="M2M" />
