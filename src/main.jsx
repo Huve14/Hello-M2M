@@ -522,7 +522,8 @@ function DoneScreen({ company, firstName, host, name, onDone, time }) {
 
 function ExploreScreen({ date, time, onBack }) {
   return (
-    <section className="screen inner-screen">
+    <section className="screen inner-screen explore-screen">
+      <ExploreM2MBackground />
       <TopBar date={date} time={time} onBack={onBack} />
       <div className="scroll-view explore-layout">
         <p className="eyebrow">What defines us</p>
@@ -549,6 +550,45 @@ function ExploreScreen({ date, time, onBack }) {
         </div>
       </div>
     </section>
+  );
+}
+
+function ExploreM2MBackground() {
+  const words = ['CONNECT', 'SYNC', 'CREATE', 'ACTIVATE', 'INSPIRE'];
+
+  return (
+    <div className="explore-bg" aria-hidden="true">
+      <span className="explore-grid" />
+      <span className="explore-blob explore-blob-red" />
+      <span className="explore-blob explore-blob-blue" />
+      <span className="explore-blob explore-blob-grey" />
+      <div className="explore-stage">
+        <div className="explore-orbit">
+          {words.map((word, index) => (
+            <span
+              className="explore-word display"
+              key={word}
+              style={{
+                '--word-angle': `${index * 72}deg`,
+                '--word-delay': `${index * -3.8}s`,
+              }}
+            >
+              {word}
+            </span>
+          ))}
+        </div>
+        <div className="explore-hub">
+          <span className="explore-halo" />
+          <img src="/assets/m2m-white.png" alt="" />
+          <span className="explore-link">
+            <i />
+            <b />
+            <i />
+          </span>
+        </div>
+      </div>
+      <span className="explore-grain" />
+    </div>
   );
 }
 
