@@ -81,6 +81,8 @@ const ACTIVATION_REGIONS = [
     lat: -26.2,
     lon: 28.05,
     rotate: -5,
+    cardX: 36,
+    cardY: -112,
     image: '/assets/activations/betway-activation.png',
   },
   {
@@ -91,6 +93,8 @@ const ACTIVATION_REGIONS = [
     lat: -29.86,
     lon: 31.02,
     rotate: 4,
+    cardX: 114,
+    cardY: -50,
     image: '/assets/activations/mr-price-mall.png',
   },
   {
@@ -101,6 +105,8 @@ const ACTIVATION_REGIONS = [
     lat: -33.92,
     lon: 18.42,
     rotate: -3,
+    cardX: -138,
+    cardY: -70,
     image: '/assets/activations/cell-c-event.png',
   },
   {
@@ -111,6 +117,8 @@ const ACTIVATION_REGIONS = [
     lat: -33.96,
     lon: 25.6,
     rotate: 5,
+    cardX: -18,
+    cardY: 70,
     image: '/assets/activations/pg-glass-event.png',
   },
   {
@@ -121,6 +129,8 @@ const ACTIVATION_REGIONS = [
     lat: -29.12,
     lon: 26.21,
     rotate: -4,
+    cardX: -92,
+    cardY: 12,
     image: '/assets/activations/mr-price-promo.png',
   },
   {
@@ -131,6 +141,8 @@ const ACTIVATION_REGIONS = [
     lat: -25.75,
     lon: 28.23,
     rotate: 3,
+    cardX: 148,
+    cardY: 30,
     image: '/assets/activations/telkom-promo.png',
   },
 ];
@@ -691,9 +703,9 @@ function ActivationGlobeShowcase() {
     const canvas = canvasRef.current;
     if (!canvas) return undefined;
 
-    const centerPhi = -2.04;
-    const centerTheta = -0.5;
-    const globeScale = 1.45;
+    const centerPhi = -2.02;
+    const centerTheta = -0.52;
+    const globeScale = 1.72;
     let phi = centerPhi;
     let theta = centerTheta;
     let dragPhi = 0;
@@ -705,7 +717,7 @@ function ActivationGlobeShowcase() {
 
     const updateMarkers = (phiCam, thetaCam) => {
       const rect = canvas.getBoundingClientRect();
-      const radius = (rect.width / 2) * 0.9 * globeScale;
+      const radius = (rect.width / 2) * 0.72 * globeScale;
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
       const lambda0 = -(phiCam + Math.PI / 2);
@@ -729,8 +741,8 @@ function ActivationGlobeShowcase() {
         }
 
         const visibility = Math.min(1, Math.max(0, (cosc + 0.02) / 0.36));
-        el.style.left = `${centerX + x * radius}px`;
-        el.style.top = `${centerY - y * radius}px`;
+        el.style.left = `${centerX + x * radius + region.cardX * visibility}px`;
+        el.style.top = `${centerY - y * radius + region.cardY * visibility}px`;
         el.style.opacity = visibility;
         el.style.filter = `blur(${(1 - visibility) * 7}px)`;
         el.style.transform = `translate(-50%, -100%) rotate(${region.rotate}deg) scale(${0.86 + visibility * 0.14})`;
@@ -882,39 +894,12 @@ function ActivationGlobeShowcase() {
 }
 
 function ExploreM2MBackground() {
-  const words = ['CONNECT', 'SYNC', 'CREATE', 'ACTIVATE', 'INSPIRE'];
-
   return (
     <div className="explore-bg" aria-hidden="true">
       <span className="explore-grid" />
       <span className="explore-blob explore-blob-red" />
       <span className="explore-blob explore-blob-blue" />
       <span className="explore-blob explore-blob-grey" />
-      <div className="explore-stage">
-        <div className="explore-orbit">
-          {words.map((word, index) => (
-            <span
-              className="explore-word display"
-              key={word}
-              style={{
-                '--word-angle': `${index * 72}deg`,
-                '--word-delay': `${index * -3.8}s`,
-              }}
-            >
-              {word}
-            </span>
-          ))}
-        </div>
-        <div className="explore-hub">
-          <span className="explore-halo" />
-          <img src="/assets/m2m-white.png" alt="" />
-          <span className="explore-link">
-            <i />
-            <b />
-            <i />
-          </span>
-        </div>
-      </div>
       <span className="explore-grain" />
     </div>
   );

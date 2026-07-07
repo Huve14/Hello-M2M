@@ -1413,7 +1413,7 @@ button {
 
 .activation-globe-wrap {
   position: relative;
-  width: min(100%, 32rem);
+  width: min(100%, 34.5rem);
   aspect-ratio: 1;
   margin: 0 auto;
 }
@@ -1445,7 +1445,7 @@ button {
 
 .activation-globe-surface {
   position: absolute;
-  inset: 4.6%;
+  inset: 1.8%;
   z-index: 2;
   display: grid;
   place-items: center;
@@ -1469,10 +1469,10 @@ button {
 .activation-globe-surface::before {
   content: '';
   position: absolute;
-  left: 51%;
-  top: 47%;
-  width: 15%;
-  height: 20%;
+  left: 49%;
+  top: 45%;
+  width: 19%;
+  height: 25%;
   background: rgba(237, 28, 36, 0.8);
   clip-path: polygon(22% 0, 54% 8%, 80% 27%, 72% 50%, 58% 66%, 62% 100%, 36% 84%, 16% 58%, 0 34%);
   filter: drop-shadow(0 0 1rem rgba(237, 28, 36, 0.85));
@@ -1482,8 +1482,8 @@ button {
 .activation-globe-surface::after {
   content: '';
   position: absolute;
-  left: 54%;
-  top: 50%;
+  left: 53%;
+  top: 51%;
   width: 0.65rem;
   height: 0.65rem;
   border-radius: 999px;
@@ -1495,8 +1495,8 @@ button {
 
 .activation-globe-surface b {
   position: absolute;
-  left: 57%;
-  top: 43%;
+  left: 61%;
+  top: 41%;
   border: 1px solid rgba(237, 28, 36, 0.45);
   border-radius: 999px;
   background: rgba(7, 16, 34, 0.72);
@@ -1521,7 +1521,7 @@ button {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: clamp(5.4rem, 8vw, 7rem);
+  width: clamp(5rem, 7vw, 6.4rem);
   border: 0;
   border-radius: 0.18rem;
   background: #fff;
