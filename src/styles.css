@@ -139,7 +139,7 @@ button {
   min-height: 100vh;
   place-items: center;
   align-content: center;
-  gap: clamp(1.2rem, 2.4vh, 2.1rem);
+  gap: clamp(1.8rem, 3.2vh, 3rem);
   padding: 5.4rem 5vw 3rem;
   text-align: center;
 }
@@ -371,7 +371,7 @@ button {
   position: relative;
   isolation: isolate;
   align-self: end;
-  margin-top: 0;
+  margin-top: clamp(1.8rem, 4vh, 3rem);
   overflow: hidden;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05)),
