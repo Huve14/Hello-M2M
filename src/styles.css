@@ -735,7 +735,7 @@ button {
 }
 
 .home-title span,
-.explore-title span {
+.explore-title .accent {
   color: var(--m2m-red);
 }
 
@@ -1299,25 +1299,72 @@ button {
   }
 }
 
-.explore-title {
-  max-width: 82rem;
+.explore-intro-lower {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.8rem, 3vw, 2.8rem);
+  margin-top: clamp(4rem, 7vw, 6.2rem);
+  padding: clamp(1.6rem, 2.8vw, 2.5rem) 0 clamp(1.7rem, 3vw, 2.6rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.explore-intro-lower {
-  margin-top: clamp(4rem, 8vw, 6rem);
+.explore-intro-heading {
+  min-width: 0;
+}
+
+.explore-intro-heading .eyebrow {
+  margin: 0 0 clamp(1rem, 2vw, 1.5rem);
+}
+
+.explore-title {
+  max-width: 86rem;
+  margin-top: 0;
+  font-size: clamp(3rem, 5.4vw, 5.15rem);
+  line-height: 0.96;
+}
+
+.explore-title .title-line {
+  display: block;
+  white-space: nowrap;
+}
+
+.explore-intro-panel {
+  display: grid;
+  grid-template-columns: minmax(24rem, 0.8fr) minmax(30rem, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+  min-width: 0;
+  padding-top: clamp(1.2rem, 2vw, 1.7rem);
+  border-top: 0.18rem solid rgba(237, 28, 36, 0.74);
+}
+
+.explore-intro-panel .lead {
+  max-width: 50rem;
+  margin: 0;
+  font-size: clamp(1rem, 1.5vw, 1.22rem);
+  line-height: 1.72;
 }
 
 .stats-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem 5rem;
-  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.85rem, 1.5vw, 1.2rem);
+  margin-top: 0;
+  max-width: none;
+}
+
+.stats-row .stat {
+  min-width: 0;
+  border-top: 2px solid rgba(237, 28, 36, 0.72);
+  padding-top: 0.85rem;
 }
 
 .stat strong {
   display: block;
   color: var(--m2m-red);
-  font-size: clamp(2.5rem, 5vw, 4.4rem);
+  font-size: clamp(2.1rem, 4vw, 3.8rem);
+  line-height: 0.95;
 }
 
 .stat span {
@@ -1867,6 +1914,22 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .explore-intro-lower {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+  }
+
+  .explore-intro-panel {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .explore-title .title-line {
+    white-space: normal;
+  }
+
   .activation-globe-wrap {
     width: min(100%, 30rem);
   }
@@ -1895,6 +1958,10 @@ button {
 
   .key-space {
     width: 58vw;
+  }
+
+  .stats-row {
+    grid-template-columns: 1fr;
   }
 
   .info-row {
