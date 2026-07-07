@@ -800,8 +800,8 @@ function InfoScreen({ date, time, onBack }) {
           <InfoRow label="Password" value="Finetune2019" />
         </InfoPanel>
         <InfoPanel icon={MapPin} kicker="Find us" title="Reception">
-          <InfoRow label="Address" value="399 Jan Smuts Avenue, Craighall Park, Randburg" />
-          <InfoRow label="Call us" value="011 326 1667" />
+          <InfoRow label="Address" value="Silver Stream Business Park, 10 Muswell Rd, Bryanston, Johannesburg, 2191" />
+          <InfoRow label="Call us" value="010 035 5002" />
           <InfoRow label="Hours" value="Mon - Fri, 08:00 - 17:00" />
         </InfoPanel>
       </div>
