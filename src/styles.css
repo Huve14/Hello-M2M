@@ -170,12 +170,127 @@ button {
 }
 
 .start-button {
+  position: relative;
+  isolation: isolate;
   align-self: end;
   margin-top: 4rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: none;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05)),
+    linear-gradient(135deg, rgba(237, 28, 36, 0.34), rgba(12, 23, 53, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow:
+    0 1.2rem 3.5rem rgba(0, 0, 0, 0.22),
+    0 0 0 0.5rem rgba(237, 28, 36, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
   text-transform: uppercase;
+}
+
+.start-button::before,
+.start-button::after {
+  content: '';
+  position: absolute;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.start-button::before {
+  inset: -2px;
+  z-index: 0;
+  background: linear-gradient(90deg, transparent, rgba(237, 28, 36, 0.95), rgba(255, 255, 255, 0.6), transparent);
+  opacity: 0.65;
+  animation: button-border-spin 3.2s linear infinite;
+}
+
+.start-button::after {
+  inset: 1px;
+  z-index: 1;
+  background: rgba(12, 23, 53, 0.86);
+}
+
+.button-shine {
+  position: absolute;
+  inset: -30% auto -30% -40%;
+  width: 38%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: skewX(-18deg);
+  animation: button-shine 2.8s ease-in-out infinite;
+  z-index: 2;
+}
+
+.start-button > :not(.button-shine) {
+  position: relative;
+  z-index: 3;
+}
+
+.particle-button svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--m2m-red);
+  filter: drop-shadow(0 0 0.5rem rgba(237, 28, 36, 0.5));
+}
+
+.particle-button.is-pressed {
+  transform: translateY(0) scale(0.96);
+}
+
+.particle-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.particle {
+  position: fixed;
+  left: var(--particle-x);
+  top: var(--particle-y);
+  width: var(--particle-size);
+  height: var(--particle-size);
+  border-radius: 999px;
+  background: var(--particle-color);
+  box-shadow: 0 0 1rem var(--particle-color);
+  transform: translate(-50%, -50%) scale(0);
+  animation: particle-burst 780ms cubic-bezier(0.2, 0.72, 0.2, 1) var(--particle-delay) forwards;
+}
+
+@keyframes particle-burst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+
+  24% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--particle-dx)), calc(-50% + var(--particle-dy))) scale(0.2);
+  }
+}
+
+@keyframes button-border-spin {
+  from {
+    transform: translateX(-42%);
+  }
+
+  to {
+    transform: translateX(42%);
+  }
+}
+
+@keyframes button-shine {
+  0%,
+  35% {
+    transform: translateX(0) skewX(-18deg);
+  }
+
+  75%,
+  100% {
+    transform: translateX(420%) skewX(-18deg);
+  }
 }
 
 .start-button:hover,

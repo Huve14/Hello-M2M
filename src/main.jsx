@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   ArrowLeft,
@@ -6,6 +6,7 @@ import {
   Check,
   Compass,
   MapPin,
+  MousePointerClick,
   UserPlus,
   Wifi,
 } from 'lucide-react';
@@ -165,17 +166,85 @@ function BrandStripes() {
 
 function AttractScreen({ date, time, onStart }) {
   return (
-    <section className="screen attract-screen" onClick={onStart}>
+    <section className="screen attract-screen">
       <div className="hero-mark">
         <img src="/assets/m2m-white.png" alt="M2M" />
         <p>taking <strong>BRAND</strong> to life</p>
       </div>
-      <button className="start-button" type="button">
+      <ParticleButton onActivate={onStart}>
         <span>Touch to begin</span>
-        <ArrowRight aria-hidden="true" />
-      </button>
+      </ParticleButton>
       <ClockPlate date={date} time={time} />
     </section>
+  );
+}
+
+function ParticleButton({ children, onActivate }) {
+  const buttonRef = useRef(null);
+  const [particles, setParticles] = useState([]);
+  const [isPressed, setIsPressed] = useState(false);
+
+  const handleClick = () => {
+    const rect = buttonRef.current?.getBoundingClientRect();
+    if (!rect) {
+      onActivate();
+      return;
+    }
+
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const nextParticles = Array.from({ length: 18 }, (_, index) => {
+      const angle = (index / 18) * Math.PI * 2;
+      const distance = 42 + (index % 4) * 18;
+      return {
+        id: `${Date.now()}-${index}`,
+        x: centerX,
+        y: centerY,
+        dx: Math.cos(angle) * distance,
+        dy: Math.sin(angle) * distance - 20,
+        delay: (index % 6) * 28,
+        color: index % 3 === 0 ? '#ffffff' : '#ed1c24',
+        size: index % 4 === 0 ? 8 : 5,
+      };
+    });
+
+    setParticles(nextParticles);
+    setIsPressed(true);
+    window.setTimeout(() => setIsPressed(false), 160);
+    window.setTimeout(() => setParticles([]), 950);
+    window.setTimeout(onActivate, 520);
+  };
+
+  return (
+    <>
+      <span className="particle-layer" aria-hidden="true">
+        {particles.map((particle) => (
+          <i
+            className="particle"
+            key={particle.id}
+            style={{
+              '--particle-x': `${particle.x}px`,
+              '--particle-y': `${particle.y}px`,
+              '--particle-dx': `${particle.dx}px`,
+              '--particle-dy': `${particle.dy}px`,
+              '--particle-delay': `${particle.delay}ms`,
+              '--particle-color': particle.color,
+              '--particle-size': `${particle.size}px`,
+            }}
+          />
+        ))}
+      </span>
+      <button
+        className={`start-button particle-button ${isPressed ? 'is-pressed' : ''}`}
+        ref={buttonRef}
+        type="button"
+        onClick={handleClick}
+      >
+        <span className="button-shine" aria-hidden="true" />
+        {children}
+        <MousePointerClick aria-hidden="true" />
+      </button>
+    </>
   );
 }
 
