@@ -1413,7 +1413,7 @@ button {
 
 .activation-globe-wrap {
   position: relative;
-  width: min(100%, 34.5rem);
+  width: min(100%, 38rem);
   aspect-ratio: 1;
   margin: 0 auto;
 }
@@ -1430,73 +1430,60 @@ button {
   pointer-events: none;
 }
 
-.activation-globe {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 999px;
-  cursor: grab;
-  opacity: 0;
-  touch-action: none;
-  transition: opacity 600ms ease;
-}
-
 .activation-globe-surface {
   position: absolute;
-  inset: 1.8%;
+  inset: 8%;
   z-index: 2;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(220, 221, 222, 0.22);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.84);
   border-radius: 999px;
   background:
-    radial-gradient(circle at 56% 57%, rgba(237, 28, 36, 0.28) 0 3.6%, transparent 3.8%),
-    radial-gradient(circle at 58% 59%, rgba(237, 28, 36, 0.16) 0 10%, transparent 10.4%),
-    radial-gradient(circle at 51% 52%, transparent 0 37%, rgba(220, 221, 222, 0.13) 37.3% 37.8%, transparent 38.1%),
-    repeating-radial-gradient(circle at 50% 50%, transparent 0 14%, rgba(220, 221, 222, 0.12) 14.2% 14.55%, transparent 14.9% 24%),
-    repeating-conic-gradient(from 8deg, rgba(220, 221, 222, 0.12) 0 0.7deg, transparent 0.7deg 18deg),
-    radial-gradient(circle at 42% 38%, rgba(41, 62, 155, 0.4), rgba(12, 23, 53, 0.2) 58%, rgba(4, 8, 19, 0.15));
+    radial-gradient(circle at 56% 58%, rgba(237, 28, 36, 0.24) 0 3.2%, transparent 3.4%),
+    radial-gradient(circle at 57% 59%, rgba(237, 28, 36, 0.14) 0 11%, transparent 11.4%),
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 13.6%, rgba(151, 159, 174, 0.24) 13.8% 14.2%, transparent 14.45% 24%),
+    repeating-conic-gradient(from -8deg, rgba(151, 159, 174, 0.22) 0 0.55deg, transparent 0.55deg 16deg),
+    radial-gradient(circle at 34% 28%, #ffffff 0 18%, #f2f4f5 42%, #dfe4e6 72%, #bac2c9 100%);
   box-shadow:
-    inset -1.4rem -1.6rem 3rem rgba(0, 0, 0, 0.44),
-    inset 1.2rem 1.2rem 2.4rem rgba(255, 255, 255, 0.08),
-    0 0 2.8rem rgba(237, 28, 36, 0.12);
-  mix-blend-mode: screen;
+    inset -2rem -2.3rem 3.4rem rgba(7, 16, 34, 0.24),
+    inset 1.35rem 1.25rem 2.4rem rgba(255, 255, 255, 0.8),
+    0 1.4rem 2.4rem rgba(0, 0, 0, 0.24),
+    0 0 3.4rem rgba(255, 255, 255, 0.12);
   pointer-events: none;
 }
 
 .activation-globe-surface::before {
   content: '';
   position: absolute;
-  left: 49%;
-  top: 45%;
-  width: 19%;
-  height: 25%;
+  left: 52.5%;
+  top: 60.5%;
+  width: 14%;
+  height: 11%;
   background: rgba(237, 28, 36, 0.8);
-  clip-path: polygon(22% 0, 54% 8%, 80% 27%, 72% 50%, 58% 66%, 62% 100%, 36% 84%, 16% 58%, 0 34%);
+  clip-path: polygon(13% 18%, 32% 4%, 58% 0, 82% 14%, 94% 41%, 77% 65%, 58% 84%, 42% 100%, 22% 82%, 6% 54%);
   filter: drop-shadow(0 0 1rem rgba(237, 28, 36, 0.85));
-  transform: rotate(-16deg);
+  transform: rotate(-8deg);
 }
 
 .activation-globe-surface::after {
   content: '';
   position: absolute;
-  left: 53%;
-  top: 51%;
-  width: 0.65rem;
-  height: 0.65rem;
-  border-radius: 999px;
-  background: var(--m2m-red);
-  box-shadow:
-    0 0 0 0.45rem rgba(237, 28, 36, 0.22),
-    0 0 1.25rem rgba(237, 28, 36, 0.9);
+  inset: 0;
+  background:
+    radial-gradient(circle at 43% 31%, rgba(7, 16, 34, 0.78) 0 0.12rem, transparent 0.13rem),
+    radial-gradient(circle at 35% 44%, rgba(7, 16, 34, 0.72) 0 0.105rem, transparent 0.12rem),
+    radial-gradient(circle at 38% 57%, rgba(7, 16, 34, 0.7) 0 0.11rem, transparent 0.125rem),
+    radial-gradient(circle at 47% 68%, rgba(7, 16, 34, 0.72) 0 0.11rem, transparent 0.125rem);
+  background-size: 0.66rem 0.66rem;
+  clip-path: polygon(22% 24%, 34% 18%, 51% 19%, 63% 30%, 68% 44%, 64% 58%, 70% 70%, 59% 84%, 45% 82%, 36% 72%, 32% 59%, 22% 52%, 17% 39%);
+  opacity: 0.78;
 }
 
 .activation-globe-surface b {
   position: absolute;
-  left: 61%;
-  top: 41%;
+  left: 70%;
+  top: 48%;
   border: 1px solid rgba(237, 28, 36, 0.45);
   border-radius: 999px;
   background: rgba(7, 16, 34, 0.72);
@@ -1510,36 +1497,66 @@ button {
   white-space: nowrap;
 }
 
+.activation-map-pins {
+  position: absolute;
+  inset: 8%;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.activation-map-pins i {
+  position: absolute;
+  left: var(--pin-x);
+  top: var(--pin-y);
+  width: 0.54rem;
+  height: 0.54rem;
+  border-radius: 999px;
+  background: var(--m2m-red);
+  box-shadow:
+    0 0 0 0.38rem rgba(237, 28, 36, 0.22),
+    0 0 1.1rem rgba(237, 28, 36, 0.78);
+  transform: translate(-50%, -50%);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.activation-map-pins i.is-active {
+  box-shadow:
+    0 0 0 0.55rem rgba(237, 28, 36, 0.25),
+    0 0 1.45rem rgba(237, 28, 36, 0.95);
+  transform: translate(-50%, -50%) scale(1.22);
+}
+
 .activation-polaroid-stage {
   position: absolute;
   inset: 0;
-  z-index: 3;
+  z-index: 5;
   pointer-events: none;
 }
 
 .activation-polaroid {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: clamp(5rem, 7vw, 6.4rem);
+  left: calc(50% + var(--card-x));
+  top: calc(50% + var(--card-y));
+  width: clamp(4.8rem, 6vw, 6.1rem);
   border: 0;
   border-radius: 0.18rem;
   background: #fff;
   box-shadow: 0 1.2rem 2rem -0.7rem rgba(0, 0, 0, 0.55), 0 0.2rem 0.8rem rgba(0, 0, 0, 0.18);
   color: #101522;
-  filter: blur(7px);
-  opacity: 0;
+  opacity: 0.94;
   padding: 0.38rem 0.38rem 1.55rem;
   pointer-events: auto;
-  transform: translate(-50%, -100%) rotate(var(--r));
-  transform-origin: bottom center;
-  transition: box-shadow 180ms ease, width 180ms ease;
-  will-change: left, top, opacity, filter, transform;
+  transform: translate(-50%, -50%) rotate(var(--r));
+  transform-origin: center;
+  transition: box-shadow 180ms ease, opacity 180ms ease, transform 180ms ease;
+  will-change: transform;
 }
 
 .activation-polaroid.is-active {
   z-index: 6;
   box-shadow: 0 1.5rem 2.5rem -0.65rem rgba(237, 28, 36, 0.58), 0 0.3rem 1rem rgba(237, 28, 36, 0.24);
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(var(--r)) scale(1.07);
 }
 
 .activation-polaroid img {
@@ -1566,18 +1583,6 @@ button {
   color: var(--m2m-red);
   font-size: 0.55rem;
   text-transform: uppercase;
-}
-
-.activation-polaroid i {
-  position: absolute;
-  left: 50%;
-  bottom: -0.9rem;
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 999px;
-  background: var(--m2m-red);
-  box-shadow: 0 0 0 0.32rem rgba(237, 28, 36, 0.2), 0 0 0.8rem rgba(237, 28, 36, 0.78);
-  transform: translateX(-50%);
 }
 
 .activation-hint {
