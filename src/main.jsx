@@ -167,10 +167,6 @@ function BrandStripes() {
 function AttractScreen({ date, time, onStart }) {
   return (
     <section className="screen attract-screen">
-      <div className="hero-mark">
-        <img src="/assets/m2m-white.png" alt="M2M" />
-        <p>taking <strong>BRAND</strong> to life</p>
-      </div>
       <AttractNetworkVisual />
       <ParticleButton onActivate={onStart}>
         <span>Touch to begin</span>

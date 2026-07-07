@@ -139,8 +139,8 @@ button {
   min-height: 100vh;
   place-items: center;
   align-content: center;
-  gap: clamp(1rem, 2.1vh, 1.8rem);
-  padding: 6rem 5vw 3rem;
+  gap: clamp(1.2rem, 2.4vh, 2.1rem);
+  padding: 5.4rem 5vw 3rem;
   text-align: center;
 }
 
@@ -158,9 +158,9 @@ button {
 .attract-network {
   position: relative;
   display: grid;
-  width: min(34rem, 78vw);
-  height: clamp(11rem, 23vh, 16rem);
-  margin-top: 0.9rem;
+  width: min(54rem, 88vw);
+  height: clamp(23rem, 52vh, 36rem);
+  margin-top: 0;
   place-items: center;
   isolation: isolate;
 }
@@ -176,13 +176,13 @@ button {
 .attract-network::before {
   width: 90%;
   height: 74%;
-  background: radial-gradient(circle, rgba(237, 28, 36, 0.24), transparent 62%);
-  filter: blur(2rem);
+  background: radial-gradient(circle, rgba(237, 28, 36, 0.3), transparent 62%);
+  filter: blur(3.2rem);
 }
 
 .attract-network::after {
-  width: 68%;
-  height: 68%;
+  width: 66%;
+  height: 66%;
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: inset 0 0 2rem rgba(41, 62, 155, 0.22);
 }
@@ -190,7 +190,7 @@ button {
 .attract-network img {
   position: relative;
   z-index: 3;
-  width: min(17rem, 46vw);
+  width: min(28rem, 62vw);
   opacity: 0.92;
   filter:
     drop-shadow(0 1rem 2.5rem rgba(0, 0, 0, 0.4))
@@ -206,7 +206,7 @@ button {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 2.4rem 2.4rem;
+  background-size: 3.2rem 3.2rem;
   mask-image: radial-gradient(ellipse 64% 54% at 50% 50%, black 18%, transparent 78%);
 }
 
@@ -217,8 +217,8 @@ button {
 }
 
 .attract-network-halo-main {
-  width: clamp(11rem, 30vw, 17rem);
-  height: clamp(11rem, 30vw, 17rem);
+  width: clamp(21rem, 52vw, 34rem);
+  height: clamp(21rem, 52vw, 34rem);
   border: 1px dashed rgba(255, 255, 255, 0.28);
   box-shadow: 0 0 2rem rgba(237, 28, 36, 0.12);
   animation: attract-spin 28s linear infinite;
@@ -237,8 +237,8 @@ button {
 }
 
 .attract-network-halo-soft {
-  width: clamp(7.5rem, 22vw, 12.5rem);
-  height: clamp(7.5rem, 22vw, 12.5rem);
+  width: clamp(15rem, 38vw, 25rem);
+  height: clamp(15rem, 38vw, 25rem);
   border: 1px solid rgba(220, 221, 222, 0.18);
   animation: attract-spin 22s linear infinite reverse;
 }
@@ -252,14 +252,14 @@ button {
 }
 
 .attract-orbit-one {
-  width: clamp(19rem, 54vw, 29rem);
-  height: clamp(19rem, 54vw, 29rem);
+  width: clamp(31rem, 76vw, 49rem);
+  height: clamp(31rem, 76vw, 49rem);
   animation: attract-orbit-one-spin 18s linear infinite;
 }
 
 .attract-orbit-two {
-  width: clamp(14rem, 42vw, 23rem);
-  height: clamp(14rem, 42vw, 23rem);
+  width: clamp(24rem, 62vw, 40rem);
+  height: clamp(24rem, 62vw, 40rem);
   transform: rotateX(66deg) rotateZ(55deg);
   animation: attract-orbit-two-spin 15s linear infinite reverse;
 }
@@ -283,7 +283,7 @@ button {
 .attract-network-link {
   position: absolute;
   z-index: 4;
-  top: calc(50% + clamp(3.8rem, 9vh, 5.3rem));
+  top: calc(50% + clamp(7rem, 16vh, 10rem));
   display: flex;
   align-items: center;
   gap: 0.7rem;
@@ -371,7 +371,7 @@ button {
   position: relative;
   isolation: isolate;
   align-self: end;
-  margin-top: 0.4rem;
+  margin-top: 0;
   overflow: hidden;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05)),
