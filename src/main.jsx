@@ -256,7 +256,8 @@ function HomeScreen({ date, greeting, time, onNavigate }) {
   ];
 
   return (
-    <section className="screen inner-screen">
+    <section className="screen inner-screen home-screen">
+      <HomeRadialBackground />
       <TopBar date={date} time={time} />
       <div className="home-layout">
         <p className="eyebrow">Marketing2theMAX</p>
@@ -276,6 +277,149 @@ function HomeScreen({ date, greeting, time, onNavigate }) {
         </div>
       </div>
     </section>
+  );
+}
+
+const HOME_FRAG_SRC = `#version 300 es
+precision highp float;
+
+out vec4 fragColor;
+uniform vec3 iResolution;
+uniform float iTime;
+
+void main() {
+  vec2 r = iResolution.xy;
+  vec2 p = gl_FragCoord.xy - r * 0.5;
+  float t = iTime * 0.55;
+  vec4 o = vec4(0.0);
+
+  for (float i = 1.0; i < 10.0; i += 1.0) {
+    float a = (i * i) / 80.0 - length(p) / r.y;
+    float denom = max(a, -a * 3.0) + 2.0 / r.y;
+    float wave = cos(i - t);
+    float angle = atan(p.y, p.x) + wave + i * i;
+    float sm = smoothstep(wave, 2.0, cos(angle));
+    o += 0.03 / denom * sm * (1.2 + sin(angle + i + vec4(0.0, 2.0, 4.0, 0.0)));
+  }
+
+  vec3 rings = tanh(o.rgb);
+  float energy = clamp(dot(rings, vec3(0.36, 0.46, 0.18)), 0.0, 1.0);
+  float redLift = smoothstep(0.42, 0.95, rings.r);
+  float greyLift = smoothstep(0.3, 0.9, rings.g);
+
+  vec3 navy = vec3(0.047, 0.090, 0.208);
+  vec3 blue = vec3(0.160, 0.244, 0.608);
+  vec3 red = vec3(0.929, 0.110, 0.141);
+  vec3 grey = vec3(0.863, 0.867, 0.871);
+
+  vec3 color = mix(navy, blue, energy * 0.62);
+  color = mix(color, red, redLift * 0.34);
+  color = mix(color, grey, greyLift * 0.12);
+  fragColor = vec4(color, 1.0);
+}
+`;
+
+const HOME_VERT_SRC = `#version 300 es
+precision highp float;
+layout(location=0) in vec2 a_pos;
+void main() {
+  gl_Position = vec4(a_pos, 0.0, 1.0);
+}
+`;
+
+function HomeRadialBackground() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const gl = canvas?.getContext('webgl2', { premultipliedAlpha: false });
+    if (!canvas || !gl) return undefined;
+
+    let disposed = false;
+    let animationId = 0;
+    const start = performance.now();
+
+    const compile = (type, source) => {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error(gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+      }
+      return shader;
+    };
+
+    const vertexShader = compile(gl.VERTEX_SHADER, HOME_VERT_SRC);
+    const fragmentShader = compile(gl.FRAGMENT_SHADER, HOME_FRAG_SRC);
+    if (!vertexShader || !fragmentShader) return undefined;
+
+    const program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+    gl.deleteShader(vertexShader);
+    gl.deleteShader(fragmentShader);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error(gl.getProgramInfoLog(program));
+      gl.deleteProgram(program);
+      return undefined;
+    }
+
+    const vao = gl.createVertexArray();
+    const buffer = gl.createBuffer();
+    gl.bindVertexArray(vao);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+
+    const resolutionUniform = gl.getUniformLocation(program, 'iResolution');
+    const timeUniform = gl.getUniformLocation(program, 'iTime');
+
+    const resize = () => {
+      const pixelRatio = Math.max(1, Math.min(1.5, window.devicePixelRatio || 1));
+      const width = Math.max(1, Math.floor(canvas.clientWidth * pixelRatio));
+      const height = Math.max(1, Math.floor(canvas.clientHeight * pixelRatio));
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+        gl.viewport(0, 0, width, height);
+      }
+    };
+
+    const observer = new ResizeObserver(resize);
+    observer.observe(canvas);
+    resize();
+
+    const render = (now) => {
+      if (disposed) return;
+      resize();
+      gl.useProgram(program);
+      gl.uniform3f(resolutionUniform, canvas.width, canvas.height, window.devicePixelRatio || 1);
+      gl.uniform1f(timeUniform, (now - start) / 1000);
+      gl.bindVertexArray(vao);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      animationId = window.requestAnimationFrame(render);
+    };
+
+    animationId = window.requestAnimationFrame(render);
+
+    return () => {
+      disposed = true;
+      window.cancelAnimationFrame(animationId);
+      observer.disconnect();
+      gl.deleteBuffer(buffer);
+      gl.deleteVertexArray(vao);
+      gl.deleteProgram(program);
+    };
+  }, []);
+
+  return (
+    <div className="home-radial-bg" aria-hidden="true">
+      <canvas ref={canvasRef} />
+    </div>
   );
 }
 
