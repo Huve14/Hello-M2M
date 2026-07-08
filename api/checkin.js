@@ -126,7 +126,7 @@ export default async function handler(req, res) {
 
   const { html, text } = buildEmail({ company, host, visitorName, checkedInAt });
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const from = process.env.RESEND_FROM || 'M2M Reception <reception@marketing2themax.co.za>';
+  const from = process.env.RESEND_FROM || 'M2M Reception <reception@notifications.marketing2themax.co.za>';
   const replyTo = process.env.RESEND_REPLY_TO || 'reception@marketing2themax.co.za';
 
   const { data, error } = await resend.emails.send({
