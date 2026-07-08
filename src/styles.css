@@ -604,6 +604,11 @@ button {
   display: none;
 }
 
+.low-power .home-radial-bg::before {
+  animation: low-power-home-drift 12s ease-in-out infinite;
+  transform-origin: 58% 52%;
+}
+
 .low-power .home-radial-bg::after {
   backdrop-filter: none;
 }
@@ -636,6 +641,19 @@ button {
 .low-power .activation-globe-wrap::before,
 .low-power .activation-globe-surface::before {
   filter: none;
+}
+
+@keyframes low-power-home-drift {
+  0%,
+  100% {
+    opacity: 0.86;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate3d(1.2rem, -0.9rem, 0) scale(1.045);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
