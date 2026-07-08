@@ -1582,19 +1582,19 @@ button {
   display: grid;
   place-items: center;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(220, 221, 222, 0.32);
   border-radius: 999px;
   background:
-    radial-gradient(circle at 56% 58%, rgba(237, 28, 36, 0.24) 0 3.2%, transparent 3.4%),
-    radial-gradient(circle at 57% 59%, rgba(237, 28, 36, 0.14) 0 11%, transparent 11.4%),
-    repeating-radial-gradient(circle at 50% 50%, transparent 0 13.6%, rgba(151, 159, 174, 0.24) 13.8% 14.2%, transparent 14.45% 24%),
-    repeating-conic-gradient(from -8deg, rgba(151, 159, 174, 0.22) 0 0.55deg, transparent 0.55deg 16deg),
-    radial-gradient(circle at 34% 28%, #ffffff 0 18%, #f2f4f5 42%, #dfe4e6 72%, #bac2c9 100%);
+    radial-gradient(circle at 59% 66%, rgba(237, 28, 36, 0.36) 0 3.2%, transparent 3.5%),
+    radial-gradient(circle at 58% 67%, rgba(237, 28, 36, 0.2) 0 12%, transparent 12.4%),
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 13.6%, rgba(220, 221, 222, 0.15) 13.8% 14.2%, transparent 14.45% 24%),
+    repeating-conic-gradient(from -8deg, rgba(220, 221, 222, 0.13) 0 0.55deg, transparent 0.55deg 16deg),
+    radial-gradient(circle at 31% 24%, #5e6f88 0 16%, #263b63 42%, #111d3a 73%, #071022 100%);
   box-shadow:
-    inset -2rem -2.3rem 3.4rem rgba(7, 16, 34, 0.24),
-    inset 1.35rem 1.25rem 2.4rem rgba(255, 255, 255, 0.8),
+    inset -2.1rem -2.4rem 3.5rem rgba(0, 0, 0, 0.42),
+    inset 1.35rem 1.25rem 2.4rem rgba(255, 255, 255, 0.13),
     0 1.4rem 2.4rem rgba(0, 0, 0, 0.24),
-    0 0 3.4rem rgba(255, 255, 255, 0.12);
+    0 0 3.4rem rgba(41, 62, 155, 0.18);
   pointer-events: none;
 }
 
@@ -1616,19 +1616,19 @@ button {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 43% 31%, rgba(7, 16, 34, 0.78) 0 0.12rem, transparent 0.13rem),
-    radial-gradient(circle at 35% 44%, rgba(7, 16, 34, 0.72) 0 0.105rem, transparent 0.12rem),
-    radial-gradient(circle at 38% 57%, rgba(7, 16, 34, 0.7) 0 0.11rem, transparent 0.125rem),
-    radial-gradient(circle at 47% 68%, rgba(7, 16, 34, 0.72) 0 0.11rem, transparent 0.125rem);
+    radial-gradient(circle at 43% 31%, rgba(220, 221, 222, 0.72) 0 0.12rem, transparent 0.13rem),
+    radial-gradient(circle at 35% 44%, rgba(220, 221, 222, 0.66) 0 0.105rem, transparent 0.12rem),
+    radial-gradient(circle at 38% 57%, rgba(220, 221, 222, 0.64) 0 0.11rem, transparent 0.125rem),
+    radial-gradient(circle at 47% 68%, rgba(220, 221, 222, 0.66) 0 0.11rem, transparent 0.125rem);
   background-size: 0.66rem 0.66rem;
   clip-path: polygon(22% 24%, 34% 18%, 51% 19%, 63% 30%, 68% 44%, 64% 58%, 70% 70%, 59% 84%, 45% 82%, 36% 72%, 32% 59%, 22% 52%, 17% 39%);
-  opacity: 0.78;
+  opacity: 0.72;
 }
 
 .activation-globe-surface b {
   position: absolute;
-  left: 70%;
-  top: 48%;
+  left: 67%;
+  top: 55%;
   border: 1px solid rgba(237, 28, 36, 0.45);
   border-radius: 999px;
   background: rgba(7, 16, 34, 0.72);
@@ -1653,12 +1653,13 @@ button {
   position: absolute;
   left: var(--pin-x);
   top: var(--pin-y);
-  width: 0.54rem;
-  height: 0.54rem;
+  width: 0.62rem;
+  height: 0.62rem;
+  border: 0.16rem solid var(--m2m-red);
   border-radius: 999px;
-  background: var(--m2m-red);
+  background: #fff;
   box-shadow:
-    0 0 0 0.38rem rgba(237, 28, 36, 0.22),
+    0 0 0 0.32rem rgba(237, 28, 36, 0.24),
     0 0 1.1rem rgba(237, 28, 36, 0.78);
   transform: translate(-50%, -50%);
   transition: transform 180ms ease, box-shadow 180ms ease;
